@@ -1,0 +1,509 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header" style="background: linear-gradient(135deg, #0891b2, #06b6d4); color: white;">
+                    <h3 class="mb-0"><i class="fas fa-edit"></i> Professional Resume Builder</h3>
+                    <small>Create a stunning, ATS-friendly resume in minutes</small>
+                </div>
+                <div class="card-body">
+                    <form id="resumeForm">
+                        <!-- Progress Steps -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="d-flex justify-content-between">
+                                    <div class="step active" data-step="1">1. Personal Info</div>
+                                    <div class="step" data-step="2">2. Summary & Skills</div>
+                                    <div class="step" data-step="3">3. Projects</div>
+                                    <div class="step" data-step="4">4. Education & Experience</div>
+                                    <div class="step" data-step="5">5. Certificates</div>
+                                    <div class="step" data-step="6">6. Template & Preview</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 1: Personal Information -->
+                        <div id="step1" class="form-step">
+                            <h4 class="mb-3"><i class="fas fa-user-circle"></i> Personal Information</h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Full Name *</label>
+                                    <input type="text" class="form-control" id="full_name" value="{{ full_name }}" placeholder="Dunga Dinesh Babu">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Professional Title</label>
+                                    <input type="text" class="form-control" id="professional_title" value="Aspiring Software Developer | AI Enthusiast" placeholder="e.g., Software Engineer, Data Analyst">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="email" value="{{ email }}" placeholder="your.email@example.com">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone *</label>
+                                    <input type="tel" class="form-control" id="phone" value="{{ phone }}" placeholder="+91 XXXXXXXXXX">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">LinkedIn Profile</label>
+                                    <input type="text" class="form-control" id="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">GitHub Profile</label>
+                                    <input type="text" class="form-control" id="github" placeholder="https://github.com/yourusername">
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="address" value="{{ address }}" placeholder="City, State, Country">
+                                </div>
+                            </div>
+                            <div class="text-end mt-3">
+                                <button type="button" class="btn btn-primary next-step">Next →</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Professional Summary & Skills -->
+                        <div id="step2" class="form-step" style="display: none;">
+                            <h4 class="mb-3"><i class="fas fa-align-left"></i> Professional Summary</h4>
+                            <div class="mb-3">
+                                <textarea class="form-control" id="summary" rows="4" placeholder="Write a compelling professional summary...">{{ summary }}</textarea>
+                                <small class="text-muted">Example: Passionate software developer with experience in Python, Java, and machine learning. Strong problem-solving skills and ability to work in teams.</small>
+                            </div>
+                            
+                            <h4 class="mb-3 mt-4"><i class="fas fa-code"></i> Technical Skills</h4>
+                            <div id="skills-container">
+                                {% for skill in skills_list %}
+                                <div class="input-group mb-2">
+                                    <input type="text" class="form-control skill-input" value="{{ skill }}" placeholder="e.g., Python, Java, SQL">
+                                    <button type="button" class="btn btn-danger remove-skill">🗑️</button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" id="add-skill" class="btn btn-sm btn-outline-primary mb-3">+ Add Skill</button>
+                            
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-secondary prev-step">← Previous</button>
+                                <button type="button" class="btn btn-primary next-step">Next →</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Projects -->
+                        <div id="step3" class="form-step" style="display: none;">
+                            <h4 class="mb-3"><i class="fas fa-project-diagram"></i> Projects</h4>
+                            <div id="projects-container">
+                                {% for proj in projects_list %}
+                                <div class="card mb-3 bg-dark">
+                                    <div class="card-body">
+                                        <div class="mb-2">
+                                            <input type="text" class="form-control proj-title" placeholder="Project Title" value="{{ proj.title }}">
+                                        </div>
+                                        <div class="mb-2">
+                                            <input type="text" class="form-control proj-tech" placeholder="Technologies Used (e.g., Python, Flask, ML)" value="{{ proj.technologies|default('') }}">
+                                        </div>
+                                        <div class="mb-2">
+                                            <textarea class="form-control proj-desc" rows="3" placeholder="Project Description - describe what you built, your role, and key achievements">{{ proj.description }}</textarea>
+                                        </div>
+                                        <button type="button" class="btn btn-danger btn-sm remove-project">Remove Project</button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" id="add-project" class="btn btn-sm btn-outline-primary mb-3">+ Add Project</button>
+                            
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-secondary prev-step">← Previous</button>
+                                <button type="button" class="btn btn-primary next-step">Next →</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Education & Experience -->
+                        <div id="step4" class="form-step" style="display: none;">
+                            <h4 class="mb-3"><i class="fas fa-graduation-cap"></i> Education</h4>
+                            <div id="education-container">
+                                {% for edu in education_list %}
+                                <div class="card mb-3 bg-dark">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <input type="text" class="form-control edu-degree" placeholder="Degree (e.g., B.Tech Computer Science)" value="{{ edu.degree }}">
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <input type="text" class="form-control edu-institution" placeholder="Institution Name" value="{{ edu.institution }}">
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <input type="text" class="form-control edu-year" placeholder="Year (e.g., 2023-2027)" value="{{ edu.year }}">
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <input type="text" class="form-control edu-cgpa" placeholder="CGPA/Percentage" value="{{ edu.cgpa|default('') }}">
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-danger btn-sm remove-edu">Remove</button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" id="add-edu" class="btn btn-sm btn-outline-primary mb-4">+ Add Education</button>
+                            
+                            <h4 class="mb-3"><i class="fas fa-briefcase"></i> Experience</h4>
+                            <div id="experience-container">
+                                {% for exp in experience_list %}
+                                <div class="card mb-3 bg-dark">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <input type="text" class="form-control exp-title" placeholder="Job Title" value="{{ exp.title }}">
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <input type="text" class="form-control exp-company" placeholder="Company/Organization" value="{{ exp.company }}">
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <input type="text" class="form-control exp-duration" placeholder="Duration (e.g., June 2024 - Present)" value="{{ exp.duration }}">
+                                            </div>
+                                            <div class="col-md-12 mb-2">
+                                                <textarea class="form-control exp-desc" rows="2" placeholder="Key responsibilities and achievements">{{ exp.description }}</textarea>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-danger btn-sm remove-exp">Remove</button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" id="add-exp" class="btn btn-sm btn-outline-primary mb-3">+ Add Experience</button>
+                            
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-secondary prev-step">← Previous</button>
+                                <button type="button" class="btn btn-primary next-step">Next →</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Certificates -->
+                        <div id="step5" class="form-step" style="display: none;">
+                            <h4 class="mb-3"><i class="fas fa-certificate"></i> Certificates & Achievements</h4>
+                            <p class="text-muted">Add your professional certificates, courses, and achievements to boost your resume.</p>
+                            
+                            <div id="certificates-container">
+                                {% for cert in certificates_list %}
+                                <div class="card mb-3 bg-dark">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-5 mb-2">
+                                                <input type="text" class="form-control cert-name" placeholder="Certificate Name" value="{{ cert.name }}">
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <input type="text" class="form-control cert-issuer" placeholder="Issuing Authority" value="{{ cert.issuer }}">
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <input type="text" class="form-control cert-date" placeholder="Issue Date" value="{{ cert.date }}">
+                                            </div>
+                                            <div class="col-md-12 mb-2">
+                                                <input type="text" class="form-control cert-link" placeholder="Certificate Link/URL (optional)" value="{{ cert.link }}">
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-danger btn-sm remove-cert">Remove</button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" id="add-cert" class="btn btn-sm btn-outline-primary mb-3">+ Add Certificate</button>
+                            
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle"></i> <strong>Tip:</strong> Include relevant certifications like Python, Java, AWS, Machine Learning, etc. to increase your resume value.
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-secondary prev-step">← Previous</button>
+                                <button type="button" class="btn btn-primary next-step">Next →</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 6: Template Selection & Preview -->
+                        <div id="step6" class="form-step" style="display: none;">
+                            <h4 class="mb-3"><i class="fas fa-palette"></i> Choose Resume Template</h4>
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <div class="card template-card {% if template_choice == 'professional' %}selected{% endif %}" data-template="professional">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-briefcase fa-3x text-primary mb-2"></i>
+                                            <h5>Professional</h5>
+                                            <p class="small">Clean, traditional layout ideal for corporate roles</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card template-card {% if template_choice == 'modern' %}selected{% endif %}" data-template="modern">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-code fa-3x text-success mb-2"></i>
+                                            <h5>Modern Tech</h5>
+                                            <p class="small">Sidebar layout, perfect for IT roles</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card template-card {% if template_choice == 'minimal' %}selected{% endif %}" data-template="minimal">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-pen-fancy fa-3x text-warning mb-2"></i>
+                                            <h5>Minimal</h5>
+                                            <p class="small">Simple, elegant, focuses on content</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="template_choice" value="{{ template_choice }}">
+                            
+                            <div class="alert alert-success mt-3">
+                                <i class="fas fa-check-circle"></i> Your resume will include all sections: Personal Info, Summary, Skills, Projects, Education, Experience, and Certificates.
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-secondary prev-step">← Previous</button>
+                                <button type="button" id="saveResumeBtn" class="btn btn-success">Save & Preview Resume</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .step {
+        flex: 1;
+        text-align: center;
+        padding: 10px;
+        background: #2d3748;
+        color: #a0aec0;
+        border-radius: 8px;
+        margin: 0 5px;
+        font-weight: 500;
+    }
+    .step.active {
+        background: linear-gradient(135deg, #0891b2, #06b6d4);
+        color: white;
+    }
+    .template-card {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    .template-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .template-card.selected {
+        border-color: #0891b2;
+        background: rgba(8, 145, 178, 0.1);
+    }
+    .form-step {
+        animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+</style>
+
+<script>
+    // Step navigation
+    let currentStep = 1;
+    const steps = document.querySelectorAll('.step');
+    const forms = document.querySelectorAll('.form-step');
+    
+    function showStep(step) {
+        forms.forEach((form, index) => {
+            form.style.display = (index + 1 === step) ? 'block' : 'none';
+        });
+        steps.forEach((stepEl, index) => {
+            if (index + 1 === step) {
+                stepEl.classList.add('active');
+            } else {
+                stepEl.classList.remove('active');
+            }
+        });
+        currentStep = step;
+    }
+    
+    document.querySelectorAll('.next-step').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (currentStep < 6) showStep(currentStep + 1);
+        });
+    });
+    
+    document.querySelectorAll('.prev-step').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (currentStep > 1) showStep(currentStep - 1);
+        });
+    });
+    
+    // Template selection
+    document.querySelectorAll('.template-card').forEach(card => {
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            document.getElementById('template_choice').value = card.dataset.template;
+        });
+    });
+    
+    // Add/Remove Skills
+    document.getElementById('add-skill').addEventListener('click', () => {
+        const div = document.createElement('div');
+        div.className = 'input-group mb-2';
+        div.innerHTML = '<input type="text" class="form-control skill-input" placeholder="e.g., Python"><button type="button" class="btn btn-danger remove-skill">🗑️</button>';
+        document.getElementById('skills-container').appendChild(div);
+        div.querySelector('.remove-skill').addEventListener('click', () => div.remove());
+    });
+    
+    document.querySelectorAll('.remove-skill').forEach(btn => {
+        btn.addEventListener('click', function() { this.parentElement.remove(); });
+    });
+    
+    // Add/Remove Projects
+    document.getElementById('add-project').addEventListener('click', () => {
+        const div = document.createElement('div');
+        div.className = 'card mb-3 bg-dark';
+        div.innerHTML = `
+            <div class="card-body">
+                <div class="mb-2"><input type="text" class="form-control proj-title" placeholder="Project Title"></div>
+                <div class="mb-2"><input type="text" class="form-control proj-tech" placeholder="Technologies Used"></div>
+                <div class="mb-2"><textarea class="form-control proj-desc" rows="3" placeholder="Project Description"></textarea></div>
+                <button type="button" class="btn btn-danger btn-sm remove-project">Remove Project</button>
+            </div>
+        `;
+        document.getElementById('projects-container').appendChild(div);
+        div.querySelector('.remove-project').addEventListener('click', () => div.remove());
+    });
+    
+    document.querySelectorAll('.remove-project').forEach(btn => {
+        btn.addEventListener('click', function() { this.closest('.card').remove(); });
+    });
+    
+    // Add/Remove Education
+    document.getElementById('add-edu').addEventListener('click', () => {
+        const div = document.createElement('div');
+        div.className = 'card mb-3 bg-dark';
+        div.innerHTML = `
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-2"><input type="text" class="form-control edu-degree" placeholder="Degree"></div>
+                    <div class="col-md-6 mb-2"><input type="text" class="form-control edu-institution" placeholder="Institution"></div>
+                    <div class="col-md-6 mb-2"><input type="text" class="form-control edu-year" placeholder="Year"></div>
+                    <div class="col-md-6 mb-2"><input type="text" class="form-control edu-cgpa" placeholder="CGPA"></div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm remove-edu">Remove</button>
+            </div>
+        `;
+        document.getElementById('education-container').appendChild(div);
+        div.querySelector('.remove-edu').addEventListener('click', () => div.remove());
+    });
+    
+    document.querySelectorAll('.remove-edu').forEach(btn => {
+        btn.addEventListener('click', function() { this.closest('.card').remove(); });
+    });
+    
+    // Add/Remove Experience
+    document.getElementById('add-exp').addEventListener('click', () => {
+        const div = document.createElement('div');
+        div.className = 'card mb-3 bg-dark';
+        div.innerHTML = `
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-2"><input type="text" class="form-control exp-title" placeholder="Job Title"></div>
+                    <div class="col-md-6 mb-2"><input type="text" class="form-control exp-company" placeholder="Company"></div>
+                    <div class="col-md-6 mb-2"><input type="text" class="form-control exp-duration" placeholder="Duration"></div>
+                    <div class="col-md-12 mb-2"><textarea class="form-control exp-desc" rows="2" placeholder="Description"></textarea></div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm remove-exp">Remove</button>
+            </div>
+        `;
+        document.getElementById('experience-container').appendChild(div);
+        div.querySelector('.remove-exp').addEventListener('click', () => div.remove());
+    });
+    
+    document.querySelectorAll('.remove-exp').forEach(btn => {
+        btn.addEventListener('click', function() { this.closest('.card').remove(); });
+    });
+    
+    // Add/Remove Certificates
+    document.getElementById('add-cert').addEventListener('click', () => {
+        const div = document.createElement('div');
+        div.className = 'card mb-3 bg-dark';
+        div.innerHTML = `
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-5 mb-2"><input type="text" class="form-control cert-name" placeholder="Certificate Name"></div>
+                    <div class="col-md-4 mb-2"><input type="text" class="form-control cert-issuer" placeholder="Issuing Authority"></div>
+                    <div class="col-md-3 mb-2"><input type="text" class="form-control cert-date" placeholder="Issue Date"></div>
+                    <div class="col-md-12 mb-2"><input type="text" class="form-control cert-link" placeholder="Certificate Link (optional)"></div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm remove-cert">Remove</button>
+            </div>
+        `;
+        document.getElementById('certificates-container').appendChild(div);
+        div.querySelector('.remove-cert').addEventListener('click', () => div.remove());
+    });
+    
+    document.querySelectorAll('.remove-cert').forEach(btn => {
+        btn.addEventListener('click', function() { this.closest('.card').remove(); });
+    });
+    
+    // Save Resume Data
+    document.getElementById('saveResumeBtn').addEventListener('click', () => {
+        const skills = [...document.querySelectorAll('.skill-input')].map(i => i.value.trim()).filter(v => v);
+        const projects = [...document.querySelectorAll('#projects-container .card')].map(c => ({
+            title: c.querySelector('.proj-title')?.value || '',
+            technologies: c.querySelector('.proj-tech')?.value || '',
+            description: c.querySelector('.proj-desc')?.value || ''
+        })).filter(p => p.title || p.description);
+        
+        const education = [...document.querySelectorAll('#education-container .card')].map(c => ({
+            degree: c.querySelector('.edu-degree')?.value || '',
+            institution: c.querySelector('.edu-institution')?.value || '',
+            year: c.querySelector('.edu-year')?.value || '',
+            cgpa: c.querySelector('.edu-cgpa')?.value || ''
+        })).filter(e => e.degree || e.institution);
+        
+        const experience = [...document.querySelectorAll('#experience-container .card')].map(c => ({
+            title: c.querySelector('.exp-title')?.value || '',
+            company: c.querySelector('.exp-company')?.value || '',
+            duration: c.querySelector('.exp-duration')?.value || '',
+            description: c.querySelector('.exp-desc')?.value || ''
+        })).filter(ex => ex.title || ex.company);
+        
+        const certificates = [...document.querySelectorAll('#certificates-container .card')].map(c => ({
+            name: c.querySelector('.cert-name')?.value || '',
+            issuer: c.querySelector('.cert-issuer')?.value || '',
+            date: c.querySelector('.cert-date')?.value || '',
+            link: c.querySelector('.cert-link')?.value || ''
+        })).filter(cert => cert.name);
+        
+        const data = {
+            full_name: document.getElementById('full_name').value,
+            professional_title: document.getElementById('professional_title').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            linkedin: document.getElementById('linkedin').value,
+            github: document.getElementById('github').value,
+            address: document.getElementById('address').value,
+            summary: document.getElementById('summary').value,
+            skills: skills,
+            projects: projects,
+            education: education,
+            experience: experience,
+            certificates: certificates,
+            template_choice: document.getElementById('template_choice').value
+        };
+        
+        fetch('/save_resume_data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(r => r.json()).then(d => {
+            if (d.status === 'success') {
+                window.location.href = '/preview_resume';
+            } else {
+                alert('Error saving resume. Please try again.');
+            }
+        }).catch(() => alert('Network error. Please try again.'));
+    });
+</script>
+{% endblock %}

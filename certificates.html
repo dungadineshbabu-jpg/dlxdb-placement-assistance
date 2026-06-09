@@ -1,0 +1,44 @@
+﻿ 
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4"><i class="fas fa-certificate"></i> Certificate Verification</h2>
+    
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white"><h5>Upload New Certificate</h5></div>
+                <div class="card-body">
+                    <form action="{{ url_for('upload_certificate') }}" method="POST">
+                        <div class="mb-3"><label>Certificate Name</label><input type="text" name="name" class="form-control" required></div>
+                        <div class="mb-3"><label>Issuing Authority</label><input type="text" name="authority" class="form-control" required></div>
+                        <div class="mb-3"><label>Category (optional)</label><input type="text" name="category" class="form-control" placeholder="Python, AWS, etc."></div>
+                        <button type="submit" class="btn btn-success">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header bg-info text-white"><h5>Your Certificates</h5></div>
+                <div class="card-body">
+                    {% if certificates %}
+                    <div class="list-group">
+                        {% for cert in certificates %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <div><strong>{{ cert.certificate_name }}</strong><br><small>{{ cert.issuing_authority }}</small></div>
+                                <div><span class="badge bg-success">{{ cert.category }}</span><br><small>{{ cert.issue_date.strftime('%Y-%m-%d') }}</small></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No certificates uploaded yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

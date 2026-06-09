@@ -1,0 +1,407 @@
+﻿{% extends "base.html" %}
+{% block content %}
+
+<!-- Welcome Section -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-tachometer-alt"></i> Welcome, {{ user.name }}! 👋
+                </h4>
+            </div>
+            <div class="card-body">
+                <p>Upload your resume and enter your target company details to start your personalized preparation.</p>
+                <form action="{{ url_for('process_resume') }}" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="resume" class="form-label">
+                            <i class="fas fa-file-upload"></i> Upload Resume (PDF or TXT)
+                        </label>
+                        <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.txt" required>
+                        <div class="form-text">Upload your latest resume for AI analysis</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="company" class="form-label">
+                                <i class="fas fa-building"></i> Target Company
+                            </label>
+                            <input type="text" class="form-control" id="company" name="company" 
+                                   placeholder="e.g., TCS, Google, Amazon, Infosys" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="role" class="form-label">
+                                <i class="fas fa-briefcase"></i> Job Role
+                            </label>
+                            <input type="text" class="form-control" id="role" name="role" 
+                                   placeholder="e.g., Software Engineer, Data Analyst" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-chart-line"></i> Analyze Resume & Start Preparation
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Modules Section -->
+<div class="dashboard-header mb-4">
+    <h2 class="mb-2">
+        <i class="fas fa-th-large"></i> Your Preparation Modules
+    </h2>
+    <p class="text-muted">Choose a module to start your interview preparation journey</p>
+</div>
+
+<div class="dashboard-modules">
+    <!-- 1. Resume Analysis Module -->
+    <div class="module-card" data-module="resume" onclick="window.location.href='{{ url_for('analysis') }}'">
+        <div class="module-icon">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <h5>📄 Resume Analysis</h5>
+        <p>AI-powered resume review, skill extraction, and personalized feedback</p>
+        <small>✓ Get detailed insights & suggestions</small>
+    </div>
+    
+    <!-- 2. Mock Interview Module -->
+    <div class="module-card" data-module="interview" onclick="window.location.href='{{ url_for('mock_interview') }}'">
+        <div class="module-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h5>🎤 Mock Interview</h5>
+        <p>Practice with real interview questions and get instant AI evaluation</p>
+        <small>✓ Text-based simulation</small>
+    </div>
+    
+    <!-- 3. AI Chatbot Module -->
+    <div class="module-card" data-module="chatbot" onclick="window.location.href='{{ url_for('interview_chatbot') }}'">
+        <div class="module-icon">
+            <i class="fas fa-robot"></i>
+        </div>
+        <h5>💬 AI Chatbot</h5>
+        <p>Interactive conversational practice with intelligent feedback</p>
+        <small>✓ Available 24/7</small>
+    </div>
+    
+    <!-- 4. Voice Interview Module -->
+    <div class="module-card" data-module="voice" onclick="window.location.href='{{ url_for('voice_interview') }}'">
+        <div class="module-icon">
+            <i class="fas fa-microphone-alt"></i>
+        </div>
+        <h5>🎙️ Voice Interview</h5>
+        <p>Speech-based mock interviews with realistic simulation</p>
+        <small>✓ Practice speaking</small>
+    </div>
+    
+    <!-- 5. Technical Preparation Module -->
+    <div class="module-card" data-module="technical" onclick="window.location.href='{{ url_for('preparation') }}'">
+        <div class="module-icon">
+            <i class="fas fa-laptop-code"></i>
+        </div>
+        <h5>💻 Technical Prep</h5>
+        <p>DSA, System Design, and company-specific technical questions</p>
+        <small>✓ 100+ questions</small>
+    </div>
+    
+    <!-- 6. HR Round Module -->
+    <div class="module-card" data-module="hr" onclick="window.location.href='{{ url_for('preparation') }}'">
+        <div class="module-icon">
+            <i class="fas fa-handshake"></i>
+        </div>
+        <h5>🤝 HR Round</h5>
+        <p>Behavioral questions, STAR method training, and soft skills</p>
+        <small>✓ HR interview prep</small>
+    </div>
+    
+    <!-- 7. AI Mentor Module -->
+    <div class="module-card" data-module="mentor" onclick="window.location.href='{{ url_for('mentor') }}'">
+        <div class="module-icon">
+            <i class="fas fa-chalkboard-user"></i>
+        </div>
+        <h5>🧠 AI Mentor</h5>
+        <p>Personalized guidance, tips, and answers to your questions</p>
+        <small>✓ Ask anything</small>
+    </div>
+    
+    <!-- 8. Code Practice Module -->
+    <div class="module-card" data-module="code" onclick="window.location.href='{{ url_for('code_practice') }}'">
+        <div class="module-icon">
+            <i class="fas fa-code"></i>
+        </div>
+        <h5>⌨️ Code Practice</h5>
+        <p>Live coding environment with Python and JavaScript support</p>
+        <small>✓ Run code instantly</small>
+    </div>
+    
+    <!-- 9. Aptitude Module -->
+    <div class="module-card" data-module="aptitude" onclick="window.location.href='{{ url_for('aptitude') }}'">
+        <div class="module-icon">
+            <i class="fas fa-brain"></i>
+        </div>
+        <h5>🧮 Aptitude Tests</h5>
+        <p>Quantitative aptitude, logical reasoning, and daily challenges</p>
+        <small>✓ New questions daily</small>
+    </div>
+    
+    <!-- 10. Smart Roadmap Module -->
+    <div class="module-card" data-module="roadmap" onclick="generateRoadmap()">
+        <div class="module-icon">
+            <i class="fas fa-road"></i>
+        </div>
+        <h5>🗺️ Smart Roadmap</h5>
+        <p>4-week personalized study plan based on your weak areas</p>
+        <small>✓ Track progress</small>
+    </div>
+    
+    <!-- 11. Resume Builder Module -->
+    <div class="module-card" data-module="resume" onclick="window.location.href='{{ url_for('resume_templates') }}'">
+        <div class="module-icon">
+            <i class="fas fa-edit"></i>
+        </div>
+        <h5>✏️ Resume Builder</h5>
+        <p>Create professional resumes with multiple templates</p>
+        <small>✓ Download as PDF</small>
+    </div>
+    
+    <!-- 12. Leaderboard Module -->
+    <div class="module-card" data-module="leaderboard" onclick="window.location.href='{{ url_for('leaderboard') }}'">
+        <div class="module-icon">
+            <i class="fas fa-trophy"></i>
+        </div>
+        <h5>🏆 Leaderboard</h5>
+        <p>Compete with others and track your ranking</p>
+        <small>✓ See top performers</small>
+    </div>
+</div>
+
+<!-- Roadmap Display Area -->
+<div id="roadmapContainer" style="display: none;">
+    <div class="card mt-4">
+        <div class="card-header">
+            <i class="fas fa-road"></i> Your Personalized Roadmap
+        </div>
+        <div class="card-body">
+            <div id="roadmapContent"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress & Motivation Section -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <i class="fas fa-chart-line"></i> Your Progress
+            </div>
+            <div class="card-body">
+                <div id="progressStats">
+                    <div class="text-center py-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading your stats...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <i class="fas fa-lightbulb"></i> Daily Motivation
+            </div>
+            <div class="card-body text-center">
+                <i class="fas fa-quote-left text-muted mb-2"></i>
+                <p id="dailyTip" class="mb-2">Click refresh for motivation!</p>
+                <button id="refreshMotivationBtn" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-sync-alt"></i> New Tip
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Tips Section -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <i class="fas fa-star"></i> Quick Tips for Success
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-calendar-day fa-2x text-info mb-2"></i>
+                            <p><strong>Practice Daily</strong><br>Consistency is key to success</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line fa-2x text-success mb-2"></i>
+                            <p><strong>Track Progress</strong><br>Monitor your improvement over time</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-comments fa-2x text-warning mb-2"></i>
+                            <p><strong>Review Feedback</strong><br>Learn from AI evaluations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Function to generate roadmap
+function generateRoadmap() {
+    const roadmapContainer = document.getElementById('roadmapContainer');
+    const roadmapContent = document.getElementById('roadmapContent');
+    
+    roadmapContainer.style.display = 'block';
+    roadmapContent.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div><p class="mt-2">Generating your personalized roadmap...</p></div>';
+    
+    // Scroll to roadmap
+    roadmapContainer.scrollIntoView({ behavior: 'smooth' });
+    
+    fetch('/get_roadmap')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                roadmapContent.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                return;
+            }
+            
+            let html = `
+                <div class="alert alert-info mb-3">
+                    <strong>🎯 Based on your performance:</strong> Average Score: ${data.avg_score || 0}/10
+                    ${data.weak_areas && data.weak_areas.length > 0 ? 
+                        `<br><strong>Focus Areas:</strong> ${data.weak_areas.join(', ')}` : ''}
+                </div>
+                <div class="accordion" id="roadmapAccordion">
+            `;
+            
+            let weekNum = 1;
+            for (const [week, plan] of Object.entries(data.roadmap)) {
+                html += `
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button ${weekNum > 1 ? 'collapsed' : ''}" type="button" 
+                                    data-bs-toggle="collapse" data-bs-target="#collapse${weekNum}">
+                                <strong>${week.toUpperCase()}</strong>: ${plan.focus}
+                            </button>
+                        </h2>
+                        <div id="collapse${weekNum}" class="accordion-collapse collapse ${weekNum === 1 ? 'show' : ''}" 
+                             data-bs-parent="#roadmapAccordion">
+                            <div class="accordion-body">
+                                <ul class="mb-0">
+                                    ${plan.daily_plan.map(day => `<li>${day}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                weekNum++;
+            }
+            
+            html += `</div>`;
+            
+            if (data.platforms && data.platforms.length > 0) {
+                html += `
+                    <hr>
+                    <h6><i class="fas fa-link"></i> Recommended Platforms:</h6>
+                    <ul>
+                        ${data.platforms.map(platform => `<li>${platform}</li>`).join('')}
+                    </ul>
+                `;
+            }
+            
+            roadmapContent.innerHTML = html;
+        })
+        .catch(error => {
+            roadmapContent.innerHTML = '<div class="alert alert-danger">Error loading roadmap. Please try again.</div>';
+        });
+}
+
+// Load user progress stats
+function loadProgressStats() {
+    fetch('/get_roadmap')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById('progressStats').innerHTML = `
+                    <div class="text-center text-muted">
+                        <p>Upload your resume to see progress stats</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const avgScore = data.avg_score || 0;
+            let scoreClass = 'score-low';
+            if (avgScore >= 7) scoreClass = 'score-high';
+            else if (avgScore >= 4) scoreClass = 'score-medium';
+            
+            const statsHtml = `
+                <div class="text-center">
+                    <div class="display-4 mb-2">
+                        <span class="${scoreClass}">
+                            ${avgScore}/10
+                        </span>
+                    </div>
+                    <p class="mb-1"><strong>Average Score</strong></p>
+                    <hr>
+                    ${data.weak_areas && data.weak_areas.length > 0 ? 
+                        `<p><strong>Areas to Improve:</strong></p>
+                         <ul class="text-start">
+                            ${data.weak_areas.slice(0, 3).map(area => `<li><small>${area.substring(0, 60)}</small></li>`).join('')}
+                         </ul>` : 
+                        `<p class="text-success">✓ Great job! No major weak areas detected.</p>`
+                    }
+                    <button class="btn btn-primary btn-sm mt-2" onclick="generateRoadmap()">
+                        <i class="fas fa-road"></i> Generate Roadmap
+                    </button>
+                </div>
+            `;
+            document.getElementById('progressStats').innerHTML = statsHtml;
+        })
+        .catch(() => {
+            document.getElementById('progressStats').innerHTML = `
+                <div class="text-center text-muted">
+                    <p>Complete your first interview to see stats</p>
+                    <a href="{{ url_for('mock_interview') }}" class="btn btn-primary btn-sm">
+                        Start Practice
+                    </a>
+                </div>
+            `;
+        });
+}
+
+// Load motivation tip
+function loadMotivationTip() {
+    fetch('/motivation_tip')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('dailyTip').innerHTML = data.tip;
+        })
+        .catch(() => {
+            document.getElementById('dailyTip').innerHTML = "💪 Stay consistent and keep practicing!";
+        });
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    loadProgressStats();
+    loadMotivationTip();
+    
+    const refreshBtn = document.getElementById('refreshMotivationBtn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', loadMotivationTip);
+    }
+});
+</script>
+
+{% endblock %}

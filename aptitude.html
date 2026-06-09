@@ -1,0 +1,59 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card shadow">
+            <div class="card-header" style="background: linear-gradient(135deg, #14b8a6, #0d9488); color: white;">
+                <h4 class="mb-0"><i class="fas fa-brain"></i> Daily Aptitude Challenge</h4>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-question-circle fa-3x text-info"></i>
+                    <p class="mt-2 text-muted">Test your quantitative and logical reasoning skills</p>
+                </div>
+                
+                <div class="alert alert-info">
+                    <strong><i class="fas fa-lightbulb"></i> Question:</strong>
+                    <p class="mt-2 fs-5">{{ question }}</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('check_aptitude') }}">
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-list-ul"></i> Select your answer:</label>
+                        {% for opt in options %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="answer" value="{{ opt }}" id="opt{{ loop.index }}" required>
+                            <label class="form-check-label" for="opt{{ loop.index }}">
+                                <span class="badge bg-secondary me-2">{{ loop.index }}</span> {{ opt }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-paper-plane"></i> Submit Answer
+                    </button>
+                </form>
+                
+                <hr>
+                <div class="text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-chart-line"></i> New question every time you refresh!
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header bg-info text-white">
+                <h5><i class="fas fa-chart-simple"></i> Your Progress</h5>
+            </div>
+            <div class="card-body text-center">
+                <p>Keep practicing daily to improve your aptitude score!</p>
+                <a href="{{ url_for('readiness_meter') }}" class="btn btn-outline-info">
+                    <i class="fas fa-chart-line"></i> Check Readiness
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

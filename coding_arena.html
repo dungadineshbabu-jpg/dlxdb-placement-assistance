@@ -1,0 +1,70 @@
+﻿ 
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4"><i class="fas fa-code"></i> Coding Contest Arena</h2>
+    <p class="text-muted">Weekly coding challenges – compete and earn badges</p>
+    
+    <div class="row">
+        {% for contest in contests %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white"><h5>{{ contest.name }}</h5></div>
+                <div class="card-body">
+                    <p><strong>Difficulty:</strong> <span class="badge bg-warning">{{ contest.difficulty }}</span></p>
+                    <p><strong>Participants:</strong> {{ contest.participants }}</p>
+                    <p><strong>Top Score:</strong> {{ contest.top_score }}%</p>
+                    <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#contestModal" data-contest-id="{{ contest.id }}" data-contest-name="{{ contest.name }}">Participate</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if user_contests %}
+    <div class="card mt-4">
+        <div class="card-header bg-info text-white"><h5>Your Past Performances</h5></div>
+        <div class="card-body">
+            <ul class="list-group">
+                {% for entry in user_contests %}
+                <li class="list-group-item d-flex justify-content-between">{{ entry.contest_name }} <span class="badge bg-success">{{ entry.score }}%</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Contest Modal -->
+<div class="modal fade" id="contestModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+    <div class="modal-header"><h5 id="contestTitle">Submit Solution</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+        <textarea id="contestCode" class="form-control font-monospace" rows="10" placeholder="Write your Python solution here..."></textarea>
+        <div class="mt-2"><strong>Problem:</strong> Write a function that solves the given challenge. (Refer to the problem statement in the arena description).</div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-primary" id="submitContestBtn">Submit</button></div>
+</div></div></div>
+
+<script>
+    let currentContestId = null;
+    const modal = document.getElementById('contestModal');
+    modal.addEventListener('show.bs.modal', (event) => {
+        const button = event.relatedTarget;
+        currentContestId = button.dataset.contestId;
+        document.getElementById('contestTitle').innerText = `Submit for ${button.dataset.contestName}`;
+    });
+    
+    document.getElementById('submitContestBtn').addEventListener('click', async () => {
+        const code = document.getElementById('contestCode').value;
+        if (!code.trim()) return alert('Write your code first');
+        const res = await fetch(`/submit_contest/${currentContestId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({code})
+        });
+        const data = await res.json();
+        alert(`Score: ${data.score}%\n${data.message}`);
+        location.reload();
+    });
+</script>
+{% endblock %}

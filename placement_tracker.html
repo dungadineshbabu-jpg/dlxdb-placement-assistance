@@ -1,0 +1,68 @@
+﻿ 
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4"><i class="fas fa-tasks"></i> Placement Tracker</h2>
+    
+    <div class="row mb-4">
+        <div class="col-md-2"><div class="card bg-info text-white"><div class="card-body"><h3>{{ stats.total }}</h3><small>Total</small></div></div></div>
+        <div class="col-md-2"><div class="card bg-secondary text-white"><div class="card-body"><h3>{{ stats.applied }}</h3><small>Applied</small></div></div></div>
+        <div class="col-md-2"><div class="card bg-warning text-dark"><div class="card-body"><h3>{{ stats.interview }}</h3><small>Interview</small></div></div></div>
+        <div class="col-md-2"><div class="card bg-success text-white"><div class="card-body"><h3>{{ stats.selected }}</h3><small>Selected</small></div></div></div>
+        <div class="col-md-2"><div class="card bg-danger text-white"><div class="card-body"><h3>{{ stats.rejected }}</h3><small>Rejected</small></div></div></div>
+        <div class="col-md-2"><button class="btn btn-primary w-100 h-100" data-bs-toggle="modal" data-bs-target="#addModal">+ Add Application</button></div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header"><h5>Your Applications</h5></div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead><tr><th>Company</th><th>Role</th><th>Status</th><th>Applied Date</th><th>Action</th></tr></thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>{{ app.company_name }}</td>
+                        <td>{{ app.job_role }}</td>
+                        <td><span class="badge bg-{% if app.status == 'Selected' %}success{% elif app.status == 'Rejected' %}danger{% elif app.status == 'Interview Scheduled' %}warning{% else %}secondary{% endif %}">{{ app.status }}</span></td>
+                        <td>{{ app.application_date.strftime('%Y-%m-%d') }}</td>
+                        <td><button class="btn btn-sm btn-outline-primary update-status" data-id="{{ app.id }}" data-status="{{ app.status }}">Update</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5>Add Application</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+        <input type="text" id="companyName" class="form-control mb-2" placeholder="Company Name">
+        <input type="text" id="jobRole" class="form-control mb-2" placeholder="Job Role">
+        <select id="appStatus" class="form-select"><option>Applied</option><option>Interview Scheduled</option><option>Selected</option><option>Rejected</option></select>
+    </div>
+    <div class="modal-footer"><button class="btn btn-primary" id="saveAppBtn">Save</button></div>
+</div></div></div>
+
+<script>
+    document.getElementById('saveAppBtn').addEventListener('click', async () => {
+        const company = document.getElementById('companyName').value;
+        const role = document.getElementById('jobRole').value;
+        const status = document.getElementById('appStatus').value;
+        if (!company || !role) return alert('Fill all fields');
+        await fetch('/add_application', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({company, role, status})});
+        location.reload();
+    });
+    
+    document.querySelectorAll('.update-status').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const newStatus = prompt('Enter new status (Applied/Interview Scheduled/Selected/Rejected):', btn.dataset.status);
+            if (newStatus) {
+                await fetch(`/update_application/${btn.dataset.id}`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status: newStatus})});
+                location.reload();
+            }
+        });
+    });
+</script>
+{% endblock %}
